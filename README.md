@@ -40,13 +40,18 @@ brew install aws/tap/copilot-cli
 
 ### 2. Initialize Application & Service
 
+```bash
 copilot init
+```
+
 Follow prompts to name the app (e.g., kle-n8n), service (n8n), n8n.Dockerfile, and select Load Balanced Service for public access
 
 ### 3. Deploy to an Environment
 
+```bash
 copilot env init --name prod
 copilot deploy
+```
 
 ### 4. Setup PostgreSQL (RDS)
 
@@ -74,4 +79,6 @@ Also we can monitor our service in AWS ECS -> Select Cluster -> Go to our Servic
 
 After initial deployment now just change manifest.yml file and run command
 
+```bash
 copilot deploy
+```
