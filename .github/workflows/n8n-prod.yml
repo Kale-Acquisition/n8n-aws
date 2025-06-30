@@ -12,7 +12,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ovh-baremetal
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Source
