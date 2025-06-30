@@ -1,4 +1,4 @@
-# 🧠 n8n Deployment on AWS (Fargate + RDS) using AWS Copilot
+# 🧠 n8n Setup on AWS (Fargate + RDS) using AWS Copilot
 
 This repository contains the infrastructure and deployment configuration to run a scalable, persistent instance of [n8n](https://n8n.io) using:
 
@@ -18,7 +18,7 @@ This repository contains the infrastructure and deployment configuration to run 
 | Hosting         | AWS ECS (Fargate via Copilot)       |
 | DB              | PostgreSQL (Amazon RDS `t4g.micro`) |
 | Load balancer   | ALB (Application Load Balancer)     |
-| DNS/Domain      | Route53 or external registrar       |
+| DNS/Domain      | External registrar                  |
 | Monitoring      | Amazon CloudWatch (logs + alarms)   |
 | Storage         | PostgreSQL handles persistence      |
 
@@ -26,7 +26,12 @@ This repository contains the infrastructure and deployment configuration to run 
 
 Auto rolling updates with AWS Copilot if deployment fails.
 
-## 🔧 Deployment Steps Locally
+## 🚀 CI/CD: Auto Deployment
+
+GitHub Actions are configured to automatically trigger deployment whenever changes are pushed to the main branch.
+You can also manually trigger the workflow from the Actions tab if needed.
+
+## 🔧 Deployment Steps Locally (No need if CI/CD setted up)
 
 Make sure first you have correctly configure AWS Credentials
 
@@ -75,7 +80,7 @@ Go to AWS Cloudwatch -> Log groups -> /copilot/kle-n8n-prod-n8n
 
 Also we can monitor our service in AWS ECS -> Select Cluster -> Go to our Service (there is more detailed metrics to monitor)
 
-### 8. Redeployments
+### 8. Manual Redeployments
 
 After initial deployment now just change manifest.yml file and run command
 

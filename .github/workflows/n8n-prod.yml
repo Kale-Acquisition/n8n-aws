@@ -1,0 +1,39 @@
+name: n8n Prod Deployment
+
+on:
+  push:
+    paths:
+      - 'n8n.Dockerfile'
+      - 'copilot/**'
+      - '.github/workflows/n8n-prod.yml'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ovh-baremetal
+
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Setup AWS CLI and Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::855417037357:role/cicd-n8n-deploy-role
+          aws-region: us-east-1
+
+      - name: Make deployment script executable
+        run: chmod +x ./scripts/copilot_service_deploy.sh
+
+      - name: Deploy n8n Copilot Service
+        run: ./scripts/copilot_service_deploy.sh $SERVICE $ENVIRONMENT
+        env:
+          SERVICE: n8n
+          ENVIRONMENT: prod
