@@ -5,22 +5,22 @@ This repository contains the infrastructure and deployment configuration to run 
 - **AWS Copilot CLI** (Fargate, ALB, CloudWatch, VPC, etc.)
 - **PostgreSQL** via Amazon RDS
 - **Custom domain**
-- **Optional autoscaling**
+- **Autoscaling**
 - **Persistent setup with no data loss on redeployments**
 
 ---
 
 ## 🚀 Tech Stack
 
-| Component       | Service                             |
-| --------------- | ----------------------------------- |
-| Workflow engine | `n8n` (Docker-based)                |
-| Hosting         | AWS ECS (Fargate via Copilot)       |
-| DB              | PostgreSQL (Amazon RDS `t4g.micro`) |
-| Load balancer   | ALB (Application Load Balancer)     |
-| DNS/Domain      | External registrar                  |
-| Monitoring      | Amazon CloudWatch (logs + alarms)   |
-| Storage         | PostgreSQL handles persistence      |
+| Component       | Service                                     |
+| --------------- | ------------------------------------------- |
+| Workflow engine | `n8n` (Docker-based)                        |
+| Hosting         | AWS ECS (Fargate via Copilot + Autoscaling) |
+| DB              | PostgreSQL (Amazon RDS `t4g.small`)         |
+| Load balancer   | ALB (Application Load Balancer)             |
+| DNS/Domain      | External registrar                          |
+| Monitoring      | Amazon CloudWatch (logs + alarms)           |
+| Storage         | PostgreSQL handles persistence              |
 
 ---
 
@@ -60,7 +60,7 @@ copilot deploy
 
 ### 4. Setup PostgreSQL (RDS)
 
-Go to AWS console -> Create RDS instance (t4g.micro, 20GB)
+Go to AWS console -> Create RDS instance (t4g.small, 20GB)
 Same VPC as Copilot app
 Add security group to allow ECS task access
 Create database: n8n
