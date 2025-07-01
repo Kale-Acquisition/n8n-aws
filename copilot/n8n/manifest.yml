@@ -8,19 +8,28 @@ image:
   build: n8n.Dockerfile
   port: 5678
 
-cpu: 2048
-memory: 8192
+cpu: 1024
+memory: 4096
+
 platform: linux/x86_64
-count: 1
+count:
+  range:
+    min: 1
+    max: 2
+  cooldown:
+    in: 120s
+    out: 60s
+  cpu_percentage: 75
+  memory_percentage: 80
+
 exec: true
 network:
   connect: true
 
 variables:
-  N8N_HOST: kle-n8-Publi-An5Tjt3jWfVi-833563112.us-east-1.elb.amazonaws.com
+  N8N_HOST: n8n.kaleacquisition.com
   N8N_PORT: 5678
-  WEBHOOK_URL: http://kle-n8-Publi-An5Tjt3jWfVi-833563112.us-east-1.elb.amazonaws.com
-  N8N_SECURE_COOKIE: 'false'
+  WEBHOOK_URL: https://n8n.kaleacquisition.com
   DB_TYPE: postgresdb
   DB_POSTGRESDB_PORT: 5432
   DB_POSTGRESDB_DATABASE: n8n
@@ -32,5 +41,7 @@ variables:
 
 environments:
   prod:
+    http:
+      alias: 'n8n.kaleacquisition.com'
     secrets:
       DB_POSTGRESDB_PASSWORD: /copilot/kle-n8n/prod/secrets/DB_POSTGRESDB_PASSWORD
