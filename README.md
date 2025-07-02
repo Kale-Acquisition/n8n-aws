@@ -10,6 +10,10 @@ This repository contains the infrastructure and deployment configuration to run 
 
 ---
 
+The application is live and accessible at:
+
+**👉(https://n8n.kaleacquisition.com)**
+
 ## 🚀 Tech Stack
 
 | Component       | Service                                     |
@@ -35,7 +39,9 @@ You can also manually trigger the workflow from the Actions tab if needed.
 
 Make sure first you have correctly configure AWS Credentials
 
+```bash
 aws configure
+```
 
 ### 1. Install AWS Copilot CLI
 
