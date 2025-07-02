@@ -29,6 +29,8 @@ network:
 variables:
   N8N_HOST: n8n.kaleacquisition.com
   N8N_PORT: 5678
+  EXECUTIONS_DATA_PRUNE: 'true'
+  EXECUTIONS_DATA_MAX_AGE: '168' # 7 days
   WEBHOOK_URL: https://n8n.kaleacquisition.com
   DB_TYPE: postgresdb
   DB_POSTGRESDB_PORT: 5432
