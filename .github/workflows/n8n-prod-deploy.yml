@@ -6,7 +6,7 @@ on:
     paths:
       - 'n8n.Dockerfile'
       - 'copilot/n8n/**'
-      - '.github/workflows/n8n-prod.yml'
+      - '.github/workflows/n8n-prod-deploy.yml'
     branches:
       - main
   workflow_dispatch:
