@@ -1,4 +1,4 @@
-name: Auto-Update n8n via /rest/settings
+name: Auto-Update n8n version
 
 on:
   schedule:
@@ -36,7 +36,7 @@ jobs:
           echo "digest=$LATEST_DIGEST" >> $GITHUB_OUTPUT
 
       - name: Resolve Semver Version for Digest
-        id: get_version
+        id: latest
         run: |
           VERSION=$(curl -s "https://hub.docker.com/v2/repositories/n8nio/n8n/tags?page_size=100" \
             | jq -r --arg dig "${{ steps.get_digest.outputs.digest }}" \
