@@ -24,7 +24,7 @@ jobs:
         id: current
         run: |
           RESPONSE=$(curl -s $N8N_VERSION_ENDPOINT)
-          VERSION=$(echo $RESPONSE | jq -r '.versionCli')
+          VERSION=$(echo $RESPONSE | jq -r '.data.versionCli')
           echo "Running version: $VERSION"
           echo "CURRENT_VERSION=$VERSION" >> $GITHUB_OUTPUT
 
@@ -42,7 +42,8 @@ jobs:
             | jq -r --arg dig "${{ steps.get_digest.outputs.digest }}" \
               '.results[] | select(.images[].digest == $dig) | .name' \
             | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Latest version: $VERSION"
+          echo "LATEST_VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Decide if update is needed
         id: compare
