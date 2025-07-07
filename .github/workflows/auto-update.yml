@@ -54,6 +54,7 @@ jobs:
           else
             echo "No update needed"
             echo "update_needed=false" >> $GITHUB_OUTPUT
+          fi
 
   trigger-deploy:
     needs: check-version
