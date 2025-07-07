@@ -2,15 +2,19 @@ name: Auto-Update n8n via /rest/settings
 
 on:
   schedule:
-    - cron: '0 2 * * *' # Runs daily at 2 AM UTC
+    - cron: '0 4 * * *' # Runs daily at 4 AM UTC
   workflow_dispatch:
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
 
 jobs:
   check-version:
     runs-on: ubuntu-latest
 
     env:
-      N8N_ENDPOINT: https://n8n.kaleacquisition.com/rest/settings
+      N8N_VERSION_ENDPOINT: https://n8n.kaleacquisition.com/rest/settings
 
     steps:
       - name: Install dependencies
@@ -19,7 +23,7 @@ jobs:
       - name: Get current running version from n8n
         id: current
         run: |
-          RESPONSE=$(curl -s $N8N_ENDPOINT)
+          RESPONSE=$(curl -s $N8N_VERSION_ENDPOINT)
           VERSION=$(echo $RESPONSE | jq -r '.versionCli')
           echo "Running version: $VERSION"
           echo "CURRENT_VERSION=$VERSION" >> $GITHUB_OUTPUT
