@@ -54,3 +54,4 @@ jobs:
     needs: check-version
     if: needs.check-version.outputs.update_needed == 'true'
     uses: kale-automation/n8n-aws/.github/workflows/n8n-prod-deploy.yml@main
+    secrets: inherit
