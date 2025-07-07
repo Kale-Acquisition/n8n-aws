@@ -1,0 +1,56 @@
+name: Auto-Update n8n via /rest/settings
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Runs daily at 2 AM UTC
+  workflow_dispatch:
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+
+    env:
+      N8N_ENDPOINT: https://n8n.kaleacquisition.com/rest/settings
+
+    steps:
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Get current running version from n8n
+        id: current
+        run: |
+          RESPONSE=$(curl -s $N8N_ENDPOINT)
+          VERSION=$(echo $RESPONSE | jq -r '.versionCli')
+          echo "Running version: $VERSION"
+          echo "CURRENT_VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Fetch Latest Digest from Docker Hub
+        id: get_digest
+        run: |
+          LATEST_DIGEST=$(curl -s "https://hub.docker.com/v2/repositories/n8nio/n8n/tags?name=latest" \
+            | jq -r '.results[0].images[] | select(.architecture=="amd64") | .digest')
+          echo "digest=$LATEST_DIGEST" >> $GITHUB_OUTPUT
+
+      - name: Resolve Semver Version for Digest
+        id: get_version
+        run: |
+          VERSION=$(curl -s "https://hub.docker.com/v2/repositories/n8nio/n8n/tags?page_size=100" \
+            | jq -r --arg dig "${{ steps.get_digest.outputs.digest }}" \
+              '.results[] | select(.images[].digest == $dig) | .name' \
+            | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Decide if update is needed
+        id: compare
+        run: |
+          if [ "${{ steps.latest.outputs.LATEST_VERSION }}" != "${{ steps.current.outputs.CURRENT_VERSION }}" ]; then
+            echo "New version detected"
+            echo "update_needed=true" >> $GITHUB_OUTPUT
+          else
+            echo "No update needed"
+            echo "update_needed=false" >> $GITHUB_OUTPUT
+
+  trigger-deploy:
+    needs: check-version
+    if: needs.check-version.outputs.update_needed == 'true'
+    uses: kale-automation/n8n-aws/.github/workflows/n8n-prod-deploy.yml@main
