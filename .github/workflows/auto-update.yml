@@ -13,6 +13,11 @@ jobs:
   check-version:
     runs-on: ubuntu-latest
 
+    outputs:
+      update_needed: ${{ steps.compare.outputs.update_needed }}
+      CURRENT_VERSION: ${{ steps.current.outputs.CURRENT_VERSION }}
+      LATEST_VERSION: ${{ steps.latest.outputs.LATEST_VERSION }}
+
     env:
       N8N_VERSION_ENDPOINT: https://n8n.kaleacquisition.com/rest/settings
 
@@ -82,17 +87,14 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   trigger-deploy:
-    needs: new-version-found
+    needs: [new-version-found]
     if: needs.notify-version-found.result == 'success'
     uses: Kale-Acquisition/n8n-aws/.github/workflows/n8n-prod-deploy.yml@main
     secrets: inherit
 
   failure:
     runs-on: ubuntu-latest
-    needs:
-      - check-version
-      - new-version-found
-      - trigger-deploy
+    needs: [check-version, new-version-found, trigger-deploy]
     if: failure()
     steps:
       - name: Failed Slack Alert
