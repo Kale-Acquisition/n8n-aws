@@ -3,7 +3,7 @@ type: Load Balanced Web Service
 
 http:
   path: '/'
-  healthcheck: 'healthz'
+  healthcheck: '/healthz'
 
 image:
   build: n8n.Dockerfile
@@ -33,6 +33,7 @@ variables:
   N8N_RUNNERS_ENABLED: 'true'
   EXECUTIONS_DATA_PRUNE: 'true'
   EXECUTIONS_DATA_MAX_AGE: '168' # 7 days
+  N8N_EXPRESS_TRUST_PROXY: true
   WEBHOOK_URL: https://n8n.kaleacquisition.com
   DB_TYPE: postgresdb
   DB_POSTGRESDB_PORT: 5432
