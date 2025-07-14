@@ -64,7 +64,7 @@ jobs:
       - name: Slack Alert - New Version Available
         uses: slackapi/slack-github-action@v1.26.0
         with:
-          channel-id: ${{ vars.SLACK_CHANNEL_ID }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           slack-message: |
             :arrow_up: *n8n Auto-Update Triggered*
             *Deploying new version...*
@@ -90,7 +90,7 @@ jobs:
       - name: Failed Slack Alert
         uses: slackapi/slack-github-action@v1.26.0
         with:
-          channel-id: ${{ vars.SLACK_CHANNEL_ID }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           slack-message: ">:x: Auto Update \nService: n8n \n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Failed Workflow>\n"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

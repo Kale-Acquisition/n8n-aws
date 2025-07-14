@@ -32,7 +32,7 @@ jobs:
       - name: Setup AWS CLI and Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: PROD_AWS_ROLE_TO_ASSUME
+          role-to-assume: ${{ secrets.PROD_AWS_ROLE_TO_ASSUME }}
           aws-region: us-east-1
 
       - name: Make deployment script executable
@@ -53,7 +53,7 @@ jobs:
       - name: Success Slack Alert
         uses: slackapi/slack-github-action@v1.26.0
         with:
-          channel-id: ${{ vars.SLACK_CHANNEL_ID }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           slack-message: ">:white_check_mark: DEPLOY TO Prod \nService: n8n \n"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -67,7 +67,7 @@ jobs:
       - name: Failed Slack Alert
         uses: slackapi/slack-github-action@v1.26.0
         with:
-          channel-id: ${{ vars.SLACK_CHANNEL_ID }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           slack-message: ">:x: DEPLOY TO Prod \nService: n8n \n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Failed Workflow>\n"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
