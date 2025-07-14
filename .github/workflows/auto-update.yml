@@ -56,7 +56,15 @@ jobs:
             echo "update_needed=false" >> $GITHUB_OUTPUT
           fi
 
-  notify-version-found:
+  no-new-version:
+    needs: check-version
+    if: needs.check-version.outputs.update_needed == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: No New Version Found - Log Only
+        run: echo "No new version found. Auto-update skipped."
+
+  new-version-found:
     needs: check-version
     if: needs.check-version.outputs.update_needed == 'true'
     runs-on: ubuntu-latest
@@ -74,7 +82,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   trigger-deploy:
-    needs: notify-version-found
+    needs: new-version-found
     if: needs.notify-version-found.result == 'success'
     uses: Kale-Acquisition/n8n-aws/.github/workflows/n8n-prod-deploy.yml@main
     secrets: inherit
@@ -83,7 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - check-version
-      - notify-version-found
+      - new-version-found
       - trigger-deploy
     if: failure()
     steps:
