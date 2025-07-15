@@ -87,8 +87,8 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   trigger-deploy:
-    needs: [new-version-found]
-    if: needs.notify-version-found.result == 'success'
+    needs: [check-version, new-version-found]
+    if: needs.check-version.outputs.update_needed == 'true'
     uses: Kale-Acquisition/n8n-aws/.github/workflows/n8n-prod-deploy.yml@main
     secrets: inherit
 
